@@ -1,4 +1,3 @@
-
 /* Fonts */
 :root {
   --default-font: "Open Sans",  system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
@@ -1695,4 +1694,168 @@ section,
 --------------------------------------------------------------*/
 .starter-section {
   /* Add your styles here */
+}
+
+/* Estilos para el botón de cambio de tema */
+.theme-toggle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--color-white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+  padding: 5px;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Mostrar/ocultar iconos según el tema */
+.light-icon {
+  display: none;
+}
+
+.dark-icon {
+  display: inline-block;
+}
+
+/* Variables para el tema claro (predeterminado) */
+:root {
+  --color-background: #ffffff;
+  --color-text: #212529;
+  --color-primary: #dc3545;
+  --color-secondary: #6c757d;
+  --color-section-bg-light: #f8f9fa;
+  --color-section-bg-dark: #212529;
+  --color-section-title: #dc3545;
+  --color-card-bg: #ffffff;
+  --color-card-shadow: rgba(0, 0, 0, 0.1);
+  --color-header-bg: rgba(255, 255, 255, 0.95);
+  --color-footer-bg: #212529;
+  --color-footer-text: #ffffff;
+}
+
+/* Variables para el tema oscuro */
+body.dark-theme {
+  --color-background: #121212;
+  --color-text: #e0e0e0;
+  --color-primary: #ff6b6b;
+  --color-secondary: #adb5bd;
+  --color-section-bg-light: #1e1e1e;
+  --color-section-bg-dark: #0a0a0a;
+  --color-section-title: #ff6b6b;
+  --color-card-bg: #1e1e1e;
+  --color-card-shadow: rgba(255, 255, 255, 0.05);
+  --color-header-bg: rgba(18, 18, 18, 0.95);
+  --color-footer-bg: #0a0a0a;
+  --color-footer-text: #e0e0e0;
+}
+
+/* Aplicar variables a elementos */
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+body.dark-theme .light-icon {
+  display: inline-block;
+}
+
+body.dark-theme .dark-icon {
+  display: none;
+}
+
+/* Estilos para secciones en tema oscuro */
+body.dark-theme .section:not(.dark-background):not(.light-background) {
+  background-color: var(--color-background);
+}
+
+body.dark-theme .light-background {
+  background-color: var(--color-section-bg-light);
+}
+
+body.dark-theme .dark-background {
+  background-color: var(--color-section-bg-dark);
+}
+
+/* Estilos para tarjetas en tema oscuro */
+body.dark-theme .service-item {
+  background-color: var(--color-card-bg);
+  box-shadow: 0 0 20px var(--color-card-shadow);
+}
+
+/* Estilos para el encabezado en tema oscuro */
+body.dark-theme .header {
+  background-color: var(--color-header-bg);
+}
+
+body.dark-theme .topbar {
+  background-color: var(--color-section-bg-dark);
+}
+
+/* Estilos para el equipo en tema oscuro */
+body.dark-theme .member {
+  background-color: var(--color-card-bg);
+}
+
+body.dark-theme .member-content {
+  background-color: var(--color-card-bg);
+}
+
+/* Estilos para el formulario en tema oscuro */
+body.dark-theme .form-control,
+body.dark-theme input[type=text],
+body.dark-theme input[type=email],
+body.dark-theme input[type="number"],
+body.dark-theme textarea,
+body.dark-theme select {
+  background-color: var(--color-card-bg) !important;
+  color: var(--color-text) !important;
+  border-color: var(--color-secondary) !important;
+}
+
+/* Mejorar contraste en placeholder para modo oscuro */
+body.dark-theme .form-control::placeholder,
+body.dark-theme input::placeholder,
+body.dark-theme textarea::placeholder,
+body.dark-theme select::placeholder {
+  color: var(--color-secondary) !important;
+  opacity: 0.7;
+}
+
+/* Estilo consistente para el selector de formulario en modo oscuro */
+body.dark-theme select option {
+  background-color: var(--color-card-bg);
+  color: var(--color-text);
+}
+
+/* Asegurar que el foco del formulario sea visible en modo oscuro */
+body.dark-theme .form-control:focus,
+body.dark-theme input:focus,
+body.dark-theme select:focus,
+body.dark-theme textarea:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 0.25rem rgba(255, 107, 107, 0.25) !important;
+}
+
+/* Ajustes para colores de texto y botones */
+body.dark-theme h1, 
+body.dark-theme h2, 
+body.dark-theme h3, 
+body.dark-theme h4, 
+body.dark-theme h5, 
+body.dark-theme h6 {
+  color: var(--color-text);
+}
+
+body.dark-theme .text-danger {
+  color: var(--color-primary) !important;
 }
