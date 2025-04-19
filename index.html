@@ -68,6 +68,12 @@
             <li><a href="#services">Nuestros Servicios</a></li>
             <li><a href="#team">Nuestro Equipo</a></li>
             <li><a href="#contact">Contacto</a></li>
+            <li>
+              <button id="theme-toggle" class="theme-toggle" title="Cambiar modo">
+                <i class="bi bi-sun-fill light-icon"></i>
+                <i class="bi bi-moon-fill dark-icon"></i>
+              </button>
+            </li>
           </ul>
           <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         </nav>
@@ -306,25 +312,25 @@
 
         <div class="row mt-4">
           <div class="col-lg-12">
-        <form action="forms/contact.php" method="post" role="form" class="php-email-form" data-aos="fade-up" data-aos-delay="500">
+        <form id="contact-form" role="form" class="php-email-form" data-aos="fade-up" data-aos-delay="500">
           <div class="row">
-            <div class="col-md-6 form-group">
-          <input type="text" name="name" class="form-control" id="name" placeholder="Nombre" required>
-            </div>
-            <div class="col-md-6 form-group mt-3 mt-md-0">
-          <input type="email" class="form-control" name="email" id="email" placeholder="Email" required>
+            <div class="col-md-12 form-group">
+              <input type="text" name="fullname" class="form-control" id="fullname" placeholder="Nombre completo" required>
             </div>
           </div>
           <div class="form-group mt-3">
-            <input type="text" class="form-control" name="subject" id="subject" placeholder="Asunto" required>
+            <select class="form-control" name="service" id="service-select" required>
+              <option value="" disabled selected>Seleccione un servicio</option>
+              <!-- Las opciones se cargarán dinámicamente desde la API -->
+            </select>
           </div>
           <div class="form-group mt-3">
-            <textarea class="form-control" name="message" rows="5" placeholder="Mensaje" required></textarea>
+            <textarea class="form-control" name="message" id="message" rows="5" placeholder="Mensaje" required></textarea>
           </div>
           <div class="my-3">
             <div class="loading">Cargando</div>
             <div class="error-message"></div>
-            <div class="sent-message">Tu mensaje fue enviado con exito</div>
+            <div class="sent-message">Tu mensaje fue enviado con éxito</div>
           </div>
           <div class="text-center"><button type="submit">Enviar Mensaje</button></div>
         </form>
@@ -487,6 +493,126 @@
     $(document).ready(function() {
       cargarDatosNosotros();
       cargarServicios();
+    });
+  </script>
+
+  <script>
+    // Función para gestionar el cambio de tema
+    function setupThemeToggle() {
+      const themeToggle = document.getElementById('theme-toggle');
+      const body = document.body;
+      
+      // Verificar si hay una preferencia guardada
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        body.classList.add('dark-theme');
+      }
+      
+      // Event listener para el botón de cambio de tema
+      themeToggle.addEventListener('click', function() {
+        body.classList.toggle('dark-theme');
+        
+        // Guardar la preferencia del usuario
+        if (body.classList.contains('dark-theme')) {
+          localStorage.setItem('theme', 'dark');
+        } else {
+          localStorage.setItem('theme', 'light');
+        }
+      });
+      
+      // Detectar la preferencia del sistema operativo
+      const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+      if (!savedTheme && prefersDarkScheme.matches) {
+        body.classList.add('dark-theme');
+      }
+    }
+    
+    // Inicializar cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', setupThemeToggle);
+  </script>
+
+  <script>
+    // Función para cargar los servicios en el selector del formulario
+    function cargarServiciosFormulario() {
+      const headerParams = { 'Authorization': 'Bearer ciisa' };
+      const proxyUrl = "https://cors-anywhere.herokuapp.com/"; 
+      const apiUrl = "https://ciisa.coningenio.cl/v1/services";
+      
+      $.ajax({
+        url: proxyUrl + apiUrl,
+        type: "GET",
+        dataType: "json",
+        headers: headerParams,
+        success: function(json) {
+          const serviceSelect = document.getElementById('service-select');
+          
+          // Verificar si hay datos disponibles
+          if (json.data && json.data.length > 0) {
+            // Iterar sobre cada elemento de datos y crear opciones
+            for (let i = 0; i < json.data.length; i++) {
+              const tituloEsp = json.data[i].titulo.esp;
+              
+              // Crear y añadir la opción al select
+              const option = document.createElement('option');
+              option.value = tituloEsp;
+              option.textContent = tituloEsp;
+              serviceSelect.appendChild(option);
+            }
+          } else {
+            // Si no hay servicios disponibles, agregar una opción genérica
+            const option = document.createElement('option');
+            option.value = "Consulta general";
+            option.textContent = "Consulta general";
+            serviceSelect.appendChild(option);
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error("Error al cargar los servicios para el formulario:", error);
+          // Agregar una opción genérica en caso de error
+          const serviceSelect = document.getElementById('service-select');
+          const option = document.createElement('option');
+          option.value = "Consulta general";
+          option.textContent = "Consulta general";
+          serviceSelect.appendChild(option);
+        }
+      });
+    }
+
+    // Función para manejar el envío del formulario
+    function setupFormSubmit() {
+      const form = document.getElementById('contact-form');
+      
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Recopilar datos del formulario
+        const formData = {
+          nombreCompleto: document.getElementById('fullname').value,
+          servicio: document.getElementById('service-select').value,
+          mensaje: document.getElementById('message').value
+        };
+        
+        // Mostrar los datos en la consola
+        console.log('Datos del formulario enviados:');
+        console.log(formData);
+        
+        // Mostrar mensaje de éxito
+        form.querySelector('.loading').style.display = 'none';
+        form.querySelector('.error-message').style.display = 'none';
+        form.querySelector('.sent-message').style.display = 'block';
+        
+        // Reiniciar el formulario después de 3 segundos
+        setTimeout(() => {
+          form.reset();
+          form.querySelector('.sent-message').style.display = 'none';
+        }, 3000);
+      });
+    }
+
+    // Inicializar cuando el documento esté listo
+    $(document).ready(function() {
+      cargarServiciosFormulario();
+      setupFormSubmit();
     });
   </script>
 
